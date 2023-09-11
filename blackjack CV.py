@@ -40,7 +40,7 @@ class Card:
         self.value = VALUES[rank]
 
     def __str__(self):
-        return self.rank #cardbacks
+        return self.rank 
     
     def __val__(self):
         return self.value
@@ -53,7 +53,7 @@ class Deck:
         self.deck = []
         self.player = []
         self.dealer = []
-        for i in range(1,9):
+        for i in range(1, 9):
             for rank in RANKS:
                 self.deck.append(rank)
 
@@ -76,6 +76,7 @@ class Deck:
         self.delete_cards(self.dealer)  # Delete Drawn Cards
         return self.player, self.dealer
 
+
 class Hand:
 
     def __init__(self):
@@ -95,9 +96,10 @@ class Hand:
         while self.aces > 0 and self.value > 21:
             self.value -= 10
             self.aces -= 1
-            
+
+
 def success_rate(card, obj_h):
-    '''success of 'hit' to win'''
+    """success of 'hit' to win"""
 
     rate = 0
     diff = 21 - obj_h.value
@@ -121,7 +123,7 @@ def hits(obj_de):
     return new_card
 
 
-def blackj_options(obj_de, obj_h, dealer_card):
+def blackjack_options(obj_de, obj_h, dealer_card):
     global PLAYING
     next_card = hits(obj_de)
     success_rate(next_card, obj_h)
@@ -134,7 +136,8 @@ def blackj_options(obj_de, obj_h, dealer_card):
 
     elif choice == "stand":
         PLAYING = False
-    elif choice == "double":#not shown as an option
+    # not shown as an option
+    elif choice == "double":
         next_d_card = hits(obj_de)
         obj_h.add_cards(next_d_card)
         PLAYING = False
@@ -153,7 +156,9 @@ def show_all(player_cards, dealer_cards, obj_h, obj_d):
     print(f" ----->\n PLAYER_CARDS [{obj_h.value}] : {player_cards}")
     print(f" DEALER_CARDS [{obj_d.value}] : {dealer_cards} \n ----->\n")
 
+
 '''Win/Lose conditions'''
+
 
 def player_bust(obj_h):
     if obj_h.value > 21:
@@ -161,20 +166,20 @@ def player_bust(obj_h):
     return False
 
 
-def player_wins(obj_h, obj_d, ):
-    if any((obj_h.value == 21, obj_h.value > obj_d.value and obj_h.value < 21)):
+def player_wins(obj_h, obj_d):
+    if any((obj_h.value == 21, obj_d.value < obj_h.value < 21)):
         return True
     return False
 
 
-def dealer_bust(obj_d, obj_h):
+def dealer_bust(obj_d):
     if obj_d.value > 21:
         return True
     return False
 
 
 def dealer_wins(obj_h, obj_d):
-    if any((obj_d.value == 21, obj_d.value > obj_h.value and obj_d.value < 21)):
+    if any((obj_d.value == 21, obj_h.value < obj_d.value < 21)):
         return True
     return False
 
@@ -238,10 +243,10 @@ def game():
         show_some(p_cards, d_cards, p_hand)
         global PLAYING
         while PLAYING:  # Recall var. from hit and stand function
-            blackj_options(cards_deck, p_hand, d_cards)
+            blackjack_options(cards_deck, p_hand, d_cards)
             if player_bust(p_hand):
                 d_win += 1
-                print("\n -- PLAYER --> BUUUSSTTT")
+                print("\n -- PLAYER --> LOST")
                 break
 
         PLAYING = True
@@ -252,9 +257,9 @@ def game():
             while d_hand.value < 17:
                 d_card = hits(cards_deck)
                 d_hand.add_cards(d_card)
-                if dealer_bust(d_hand, p_hand):
+                if dealer_bust(d_hand):
                     p_win += 1
-                    print("\n -- DEALER --> BUUUSSTTT\n")
+                    print("\n -- DEALER --> BUST\n")
                     break
             show_all(p_hand.cards, d_hand.cards, p_hand, d_hand)
 
@@ -272,7 +277,7 @@ def game():
             print("\n " + " DEALER WINS ".center(22, "-"))
 
         ans = str(input(" Play again(YES/NO) : ")).lower()
-        if (ans != "yes") and (ans != "y") :
+        if (ans != "yes") and (ans != "y"):
             break
         clear_screen()
         greet2(str(p_win), str(d_win), str(draw))  # Score board location -> Top
